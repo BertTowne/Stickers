@@ -1,0 +1,5 @@
+sticker-cooldown: 30000
+resource-pack:
+    url: https://download.mc-packs.net/pack/3945a4141aa1545898598844c2d9f6c187f5084a.zip
+    hash: 3945a4141aa1545898598844c2d9f6c187f5084a
+    generate-hash: true
