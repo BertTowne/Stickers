@@ -1,6 +1,7 @@
 package com.berttowne.stickers.stickers;
 
 import com.berttowne.stickers.StickersPlugin;
+import com.berttowne.stickers.util.Scheduler;
 import com.berttowne.stickers.util.TimeFormatter;
 import com.berttowne.stickers.util.injection.Service;
 import com.google.auto.service.AutoService;
@@ -37,11 +38,11 @@ import java.util.List;
 public class StickerService implements Service, Listener {
 
     // CUSTOM CHARS
-    public static final Component BLANK_INVENTORY = Component.text('\uEff1').font(Key.key("sticker_utils", "sticker_utils")).color(NamedTextColor.WHITE);
-    public static final Component STICKER_LEGUNDO = Component.text('\uEff1').font(Key.key("stickers", "stickers")).color(NamedTextColor.WHITE);
-    public static final Component STICKER_SMILE_1 = Component.text('\uEff2').font(Key.key("stickers", "stickers")).color(NamedTextColor.WHITE);
-    public static final Component STICKER_SMILE_2 = Component.text('\uEff3').font(Key.key("stickers", "stickers")).color(NamedTextColor.WHITE);
-    public static final Component STICKER_SMILE_3 = Component.text('\uEff4').font(Key.key("stickers", "stickers")).color(NamedTextColor.WHITE);
+    public static final Component BLANK_INVENTORY = Component.text('\uEff1').font(Key.key("minecraft", "default")).color(NamedTextColor.WHITE);
+    public static final Component STICKER_LEGUNDO = Component.text('\uEff1').font(Key.key("minecraft", "default")).color(NamedTextColor.WHITE);
+    public static final Component STICKER_SMILE_1 = Component.text('\uEff2').font(Key.key("minecraft", "default")).color(NamedTextColor.WHITE);
+    public static final Component STICKER_SMILE_2 = Component.text('\uEff3').font(Key.key("minecraft", "default")).color(NamedTextColor.WHITE);
+    public static final Component STICKER_SMILE_3 = Component.text('\uEff4').font(Key.key("minecraft", "default")).color(NamedTextColor.WHITE);
 
     @Inject private Gson gson;
     @Inject private StickersPlugin plugin;
@@ -212,6 +213,8 @@ public class StickerService implements Service, Listener {
 
         PlacedSticker placedSticker = new PlacedSticker(sticker, player, targetBlock, targetFace, stickerCooldown);
         placedStickers.add(placedSticker);
+
+        Scheduler.later(placedSticker::delete, stickerCooldown / 50);
 
         targetBlock.getWorld().playEffect(targetBlock.getLocation(), Effect.STEP_SOUND, Material.SLIME_BLOCK);
 

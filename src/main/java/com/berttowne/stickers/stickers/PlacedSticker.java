@@ -56,7 +56,6 @@ public class PlacedSticker {
 
         adjustRotation(blockFace);
         startFrameTask(sticker.getRefreshRate());
-        scheduleDeletion(stickerCooldown);
     }
 
     private void adjustRotation(@NotNull BlockFace blockFace) {
@@ -99,15 +98,11 @@ public class PlacedSticker {
         }, refreshRate, refreshRate, () -> placedAt + stickerService.getStickerCooldown() <= System.currentTimeMillis());
     }
 
-    private void scheduleDeletion(long stickerCooldown) {
-        Scheduler.later(this::delete, stickerCooldown / 50);
-    }
-
     private float getYaw() {
         return (placedBy.getEyeLocation().getYaw() + 180) % 360;
     }
 
-    public void delete() {
+    public final void delete() {
         hologramManager.removeHologram(hologram);
         this.active = false;
     }
