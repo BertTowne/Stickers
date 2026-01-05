@@ -21,6 +21,9 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
@@ -30,8 +33,8 @@ import java.io.IOException;
 import java.util.List;
 
 @Singleton
-@AutoService(Service.class)
-public class StickerService implements Service {
+@AutoService({Service.class, Listener.class})
+public class StickerService implements Service, Listener {
 
     // CUSTOM CHARS
     public static final Component BLANK_INVENTORY = Component.text('\uEff1').font(Key.key("sticker_utils", "sticker_utils")).color(NamedTextColor.WHITE);
@@ -80,6 +83,18 @@ public class StickerService implements Service {
         saveStickers();
 
         placedStickers.forEach(PlacedSticker::delete);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        // Remove any active stickers a player may have
+        placedStickers.removeIf(placedSticker -> {
+            if (!placedSticker.getPlacedBy().equals(event.getPlayer())) return false;
+
+            placedSticker.delete();
+            return true;
+
+        });
     }
 
     public void loadStickers() {

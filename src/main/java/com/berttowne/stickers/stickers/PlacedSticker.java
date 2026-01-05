@@ -31,6 +31,7 @@ public class PlacedSticker {
     private final Player placedBy;
 
     private int currentFrame = 0;
+    private boolean active = true;
 
     public PlacedSticker(@NotNull Sticker sticker, @NotNull Player placedBy, @NotNull Block block, BlockFace blockFace, long stickerCooldown) {
         this.sticker = sticker;
@@ -87,6 +88,8 @@ public class PlacedSticker {
         TextHologramData data = (TextHologramData) hologram.getData();
 
         Scheduler.repeatUntil(() -> {
+            if (!active) return;
+
             currentFrame = (currentFrame + 1) % sticker.getFrames().size();
             data.setText(List.of(data.getText().get(0), data.getText().get(1),
                     MiniMessage.miniMessage().serialize(sticker.getFrame(currentFrame))));
@@ -106,6 +109,7 @@ public class PlacedSticker {
 
     public void delete() {
         hologramManager.removeHologram(hologram);
+        this.active = false;
     }
 
     public Sticker getSticker() {
